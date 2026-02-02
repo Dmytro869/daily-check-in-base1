@@ -1,6 +1,12 @@
 "use client";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import sdk from "@farcaster/miniapp-sdk";
+import {
+  useAccount,
+  useConnect,
+  useSendTransaction,
+  useWaitForTransactionReceipt,
+} from "wagmi";
 import { useMiniApp } from "./providers/MiniAppProvider";
 import styles from "./page.module.css";
 
@@ -37,10 +43,23 @@ export default function Home() {
   const [authError, setAuthError] = useState<string>("");
   const [checkIns, setCheckIns] = useState<string[]>([]);
   const [status, setStatus] = useState<string>("");
+  const lastSavedHashRef = useRef<`0x${string}` | null>(null);
 
   const userId = authData?.user?.fid ?? context?.user?.fid;
   const todayKey = useMemo(() => getTodayKey(), []);
   const displayDate = useMemo(() => formatDisplayDate(new Date()), []);
+  const { address, isConnected } = useAccount();
+  const { connectAsync, connectors, isPending: isConnecting } = useConnect();
+  const {
+    data: txHash,
+    sendTransactionAsync,
+    isPending: isTxPending,
+    error: txError,
+  } = useSendTransaction();
+  const { isLoading: isConfirming, isSuccess: isConfirmed } =
+    useWaitForTransactionReceipt({
+      hash: txHash,
+    });
 
   useEffect(() => {
     const authenticate = async () => {
@@ -74,9 +93,39 @@ export default function Home() {
     setCheckIns(sorted);
   }, [userId]);
 
+  useEffect(() => {
+    if (txError) {
+      setStatus(txError.message || "Transaction failed.");
+    }
+  }, [txError]);
+
+  useEffect(() => {
+    if (!txHash) {
+      return;
+    }
+    if (isConfirming) {
+      setStatus("Waiting for transaction confirmation...");
+    }
+    if (isConfirmed && lastSavedHashRef.current !== txHash) {
+      lastSavedHashRef.current = txHash;
+      setCheckIns((prev) => {
+        if (prev.includes(todayKey)) {
+          return prev;
+        }
+        const updated = [...prev, todayKey].sort();
+        if (userId) {
+          const storageKey = `daily-check-in:${userId}`;
+          localStorage.setItem(storageKey, JSON.stringify(updated));
+        }
+        return updated;
+      });
+      setStatus("Check-in confirmed on Base.");
+    }
+  }, [txHash, isConfirming, isConfirmed, todayKey, userId]);
+
   const hasCheckedInToday = checkIns.includes(todayKey);
 
-  const handleCheckIn = () => {
+  const handleCheckIn = async () => {
     setStatus("");
     if (!userId) {
       setStatus("Waiting for user identity...");
@@ -86,11 +135,36 @@ export default function Home() {
       setStatus("You already checked in today");
       return;
     }
-    const updated = [...checkIns, todayKey].sort();
-    const storageKey = `daily-check-in:${userId}`;
-    localStorage.setItem(storageKey, JSON.stringify(updated));
-    setCheckIns(updated);
-    setStatus("Checked in. Nice work!");
+    if (isTxPending || isConfirming) {
+      setStatus("Transaction already in progress...");
+      return;
+    }
+    try {
+      let toAddress = address;
+      if (!isConnected) {
+        setStatus("Connecting wallet...");
+        const connector = connectors[0];
+        if (!connector) {
+          setStatus("No wallet connector available.");
+          return;
+        }
+        const connection = await connectAsync({ connector });
+        toAddress = connection.accounts?.[0] ?? toAddress;
+      }
+      if (!toAddress) {
+        setStatus("Wallet not available.");
+        return;
+      }
+      setStatus("Confirm the 0 ETH transaction...");
+      await sendTransactionAsync({
+        to: toAddress,
+        value: 0n,
+      });
+    } catch (error) {
+      setStatus(
+        error instanceof Error ? error.message : "Transaction cancelled."
+      );
+    }
   };
 
   return (
@@ -109,7 +183,7 @@ export default function Home() {
             <span>You already checked in today</span>
           )}
           {!isAuthLoading && !authError && !hasCheckedInToday && (
-            <span>Tap once to log today&apos;s check-in.</span>
+            <span>Tap to send a 0 ETH check-in transaction.</span>
           )}
         </div>
 
@@ -117,9 +191,19 @@ export default function Home() {
           className={styles.checkInButton}
           type="button"
           onClick={handleCheckIn}
-          disabled={!userId || hasCheckedInToday}
+          disabled={
+            !userId ||
+            hasCheckedInToday ||
+            isTxPending ||
+            isConfirming ||
+            isConnecting
+          }
         >
-          {hasCheckedInToday ? "Checked In" : "Check-In"}
+          {isTxPending || isConfirming
+            ? "Checking..."
+            : hasCheckedInToday
+              ? "Checked In"
+              : "Check-In"}
         </button>
 
         {status && <p className={styles.feedback}>{status}</p>}
