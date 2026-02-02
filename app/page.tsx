@@ -52,6 +52,10 @@ export default function Home() {
   const userId = authData?.user?.fid ?? context?.user?.fid;
   const todayKey = useMemo(() => getTodayKey(), []);
   const displayDate = useMemo(() => formatDisplayDate(new Date()), []);
+  const timeZone = useMemo(
+    () => Intl.DateTimeFormat().resolvedOptions().timeZone,
+    []
+  );
   const { address, isConnected } = useAccount();
   const { connectAsync, connectors, isPending: isConnecting } = useConnect();
   const {
@@ -249,7 +253,9 @@ export default function Home() {
         <header className={styles.header}>
           <p className={styles.eyebrow}>Daily Check-In</p>
           <h1 className={styles.title}>Consistency wins</h1>
-          <p className={styles.date}>{displayDate}</p>
+          <p className={styles.date}>
+            {displayDate} · {timeZone}
+          </p>
         </header>
 
         <div className={styles.status}>
