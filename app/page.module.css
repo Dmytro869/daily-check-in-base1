@@ -182,6 +182,12 @@
   color: rgba(248, 249, 255, 0.55);
 }
 
+.historyHint {
+  margin: 0;
+  font-size: 0.8rem;
+  color: rgba(248, 249, 255, 0.5);
+}
+
 .historyEmpty {
   margin: 0;
   font-size: 0.95rem;

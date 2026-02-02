@@ -327,6 +327,7 @@ export default function Home() {
           </p>
           <div className={styles.history}>
             <p className={styles.historyTitle}>Last 7 days</p>
+            <p className={styles.historyHint}>Format: YYYY-MM-DD</p>
             {checkIns.length === 0 && (
               <p className={styles.historyEmpty}>No check-ins yet.</p>
             )}
