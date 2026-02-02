@@ -280,6 +280,9 @@ export default function Home() {
               ? "Checked In"
               : "Check-In"}
         </button>
+        <p className={styles.helper}>
+          Each check-in sends a 0 ETH transaction and still needs gas.
+        </p>
 
         {status && <p className={styles.feedback}>{status}</p>}
 
