@@ -155,6 +155,7 @@ export default function Home() {
   const hasCheckedInToday = checkIns.includes(todayKey);
   const bonusCountToday = bonusCountsByDay[todayKey] ?? 0;
   const canSendBonus = bonusCountToday < 10;
+  const lastCheckIn = checkIns.length ? checkIns[checkIns.length - 1] : null;
 
   const handleCheckIn = async () => {
     setStatus("");
@@ -291,6 +292,9 @@ export default function Home() {
             <span className={styles.countNumber}>{checkIns.length}</span>
             <span className={styles.countLabel}>days checked in</span>
           </div>
+          <p className={styles.lastCheckIn}>
+            Last check-in: {lastCheckIn ?? "—"}
+          </p>
           <div className={styles.history}>
             <p className={styles.historyTitle}>Last 7 days</p>
             {checkIns.length === 0 && (
