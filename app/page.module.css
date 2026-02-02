@@ -52,6 +52,8 @@
   min-height: 24px;
   font-size: 0.95rem;
   color: rgba(248, 249, 255, 0.8);
+  max-width: 300px;
+  line-height: 1.4;
 }
 
 .checkInButton {
