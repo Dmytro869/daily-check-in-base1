@@ -75,6 +75,7 @@
   color: rgba(248, 249, 255, 0.8);
   max-width: 300px;
   line-height: 1.4;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .wallet {
