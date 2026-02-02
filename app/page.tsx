@@ -344,6 +344,9 @@ export default function Home() {
                 Tip: you can send up to 10 bonus tx per day.
               </p>
             )}
+            {!canSendBonus && (
+              <p className={styles.bonusLimit}>Daily bonus limit reached.</p>
+            )}
             <button
               className={styles.bonusButton}
               type="button"

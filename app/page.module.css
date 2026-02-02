@@ -212,6 +212,12 @@
   color: rgba(248, 249, 255, 0.6);
 }
 
+.bonusLimit {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(255, 140, 140, 0.9);
+}
+
 .bonusButton {
   background: rgba(91, 140, 255, 0.2);
   color: #dbe6ff;
