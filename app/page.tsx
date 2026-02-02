@@ -314,7 +314,7 @@ export default function Home() {
                   .slice(0, 7)
                   .map((day) => (
                     <li key={day} className={styles.historyItem}>
-                      {day}
+                      • {day}
                     </li>
                   ))}
               </ul>
