@@ -44,6 +44,10 @@ export default function Home() {
   const [checkIns, setCheckIns] = useState<string[]>([]);
   const [status, setStatus] = useState<string>("");
   const lastSavedHashRef = useRef<`0x${string}` | null>(null);
+  const lastActionRef = useRef<"checkin" | "bonus" | null>(null);
+  const [bonusCountsByDay, setBonusCountsByDay] = useState<
+    Record<string, number>
+  >({});
 
   const userId = authData?.user?.fid ?? context?.user?.fid;
   const todayKey = useMemo(() => getTodayKey(), []);
@@ -94,6 +98,16 @@ export default function Home() {
   }, [userId]);
 
   useEffect(() => {
+    if (!userId) {
+      return;
+    }
+    const storageKey = `daily-check-in:bonus:${userId}`;
+    const raw = localStorage.getItem(storageKey);
+    const parsed = raw ? (JSON.parse(raw) as Record<string, number>) : {};
+    setBonusCountsByDay(parsed);
+  }, [userId]);
+
+  useEffect(() => {
     if (txError) {
       setStatus(txError.message || "Transaction failed.");
     }
@@ -108,22 +122,39 @@ export default function Home() {
     }
     if (isConfirmed && lastSavedHashRef.current !== txHash) {
       lastSavedHashRef.current = txHash;
-      setCheckIns((prev) => {
-        if (prev.includes(todayKey)) {
-          return prev;
-        }
-        const updated = [...prev, todayKey].sort();
-        if (userId) {
-          const storageKey = `daily-check-in:${userId}`;
-          localStorage.setItem(storageKey, JSON.stringify(updated));
-        }
-        return updated;
-      });
-      setStatus("Check-in confirmed on Base.");
+      if (lastActionRef.current === "checkin") {
+        setCheckIns((prev) => {
+          if (prev.includes(todayKey)) {
+            return prev;
+          }
+          const updated = [...prev, todayKey].sort();
+          if (userId) {
+            const storageKey = `daily-check-in:${userId}`;
+            localStorage.setItem(storageKey, JSON.stringify(updated));
+          }
+          return updated;
+        });
+        setStatus("Check-in confirmed on Base.");
+      }
+      if (lastActionRef.current === "bonus") {
+        setBonusCountsByDay((prev) => {
+          const current = prev[todayKey] ?? 0;
+          const next = Math.min(current + 1, 10);
+          const updated = { ...prev, [todayKey]: next };
+          if (userId) {
+            const storageKey = `daily-check-in:bonus:${userId}`;
+            localStorage.setItem(storageKey, JSON.stringify(updated));
+          }
+          return updated;
+        });
+        setStatus("Bonus transaction confirmed.");
+      }
     }
   }, [txHash, isConfirming, isConfirmed, todayKey, userId]);
 
   const hasCheckedInToday = checkIns.includes(todayKey);
+  const bonusCountToday = bonusCountsByDay[todayKey] ?? 0;
+  const canSendBonus = bonusCountToday < 10;
 
   const handleCheckIn = async () => {
     setStatus("");
@@ -156,6 +187,50 @@ export default function Home() {
         return;
       }
       setStatus("Confirm the 0 ETH transaction...");
+      lastActionRef.current = "checkin";
+      await sendTransactionAsync({
+        to: toAddress,
+        value: BigInt(0),
+      });
+    } catch (error) {
+      setStatus(
+        error instanceof Error ? error.message : "Transaction cancelled."
+      );
+    }
+  };
+
+  const handleBonusTx = async () => {
+    setStatus("");
+    if (!userId) {
+      setStatus("Waiting for user identity...");
+      return;
+    }
+    if (!canSendBonus) {
+      setStatus("Daily bonus limit reached.");
+      return;
+    }
+    if (isTxPending || isConfirming) {
+      setStatus("Transaction already in progress...");
+      return;
+    }
+    try {
+      let toAddress = address;
+      if (!isConnected) {
+        setStatus("Connecting wallet...");
+        const connector = connectors[0];
+        if (!connector) {
+          setStatus("No wallet connector available.");
+          return;
+        }
+        const connection = await connectAsync({ connector });
+        toAddress = connection.accounts?.[0] ?? toAddress;
+      }
+      if (!toAddress) {
+        setStatus("Wallet not available.");
+        return;
+      }
+      setStatus("Confirm the bonus 0 ETH transaction...");
+      lastActionRef.current = "bonus";
       await sendTransactionAsync({
         to: toAddress,
         value: BigInt(0),
@@ -231,6 +306,25 @@ export default function Home() {
                   ))}
               </ul>
             )}
+          </div>
+          <div className={styles.bonusPanel}>
+            <div className={styles.bonusText}>
+              Bonus tx today: {bonusCountToday}/10
+            </div>
+            <button
+              className={styles.bonusButton}
+              type="button"
+              onClick={handleBonusTx}
+              disabled={
+                !userId ||
+                !canSendBonus ||
+                isTxPending ||
+                isConfirming ||
+                isConnecting
+              }
+            >
+              {isTxPending || isConfirming ? "Sending..." : "Send Bonus Tx"}
+            </button>
           </div>
         </section>
       </main>

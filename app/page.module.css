@@ -139,3 +139,39 @@
   font-size: 0.85rem;
   text-align: center;
 }
+
+.bonusPanel {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.bonusText {
+  font-size: 0.9rem;
+  color: rgba(248, 249, 255, 0.7);
+}
+
+.bonusButton {
+  background: rgba(91, 140, 255, 0.2);
+  color: #dbe6ff;
+  border: 1px solid rgba(91, 140, 255, 0.5);
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+.bonusButton:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.bonusButton:not(:disabled):hover {
+  transform: translateY(-1px);
+}
