@@ -213,6 +213,7 @@
   text-align: center;
   font-family: var(--font-source-code-pro), ui-monospace, SFMono-Regular, Menlo,
     Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  transition: background 0.2s ease;
 }
 
 .historyItem:hover {
