@@ -36,6 +36,8 @@ const formatDisplayDate = (date: Date) =>
     day: "numeric",
   });
 
+const STORAGE_VERSION = "v2";
+
 export default function Home() {
   const { context, isReady } = useMiniApp();
   const [authData, setAuthData] = useState<AuthResponse | null>(null);
@@ -100,7 +102,7 @@ export default function Home() {
     if (!userId) {
       return;
     }
-    const storageKey = `daily-check-in:${userId}`;
+    const storageKey = `daily-check-in:${STORAGE_VERSION}:${userId}`;
     const raw = localStorage.getItem(storageKey);
     const parsed = raw ? (JSON.parse(raw) as string[]) : [];
     const sorted = Array.from(new Set(parsed)).sort();
@@ -111,7 +113,7 @@ export default function Home() {
     if (!userId) {
       return;
     }
-    const storageKey = `daily-check-in:bonus:${userId}`;
+    const storageKey = `daily-check-in:bonus:${STORAGE_VERSION}:${userId}`;
     const raw = localStorage.getItem(storageKey);
     const parsed = raw ? (JSON.parse(raw) as Record<string, number>) : {};
     setBonusCountsByDay(parsed);
@@ -139,7 +141,7 @@ export default function Home() {
           }
           const updated = [...prev, todayKey].sort();
           if (userId) {
-            const storageKey = `daily-check-in:${userId}`;
+          const storageKey = `daily-check-in:${STORAGE_VERSION}:${userId}`;
             localStorage.setItem(storageKey, JSON.stringify(updated));
           }
           return updated;
@@ -152,7 +154,7 @@ export default function Home() {
           const next = Math.min(current + 1, 10);
           const updated = { ...prev, [todayKey]: next };
           if (userId) {
-            const storageKey = `daily-check-in:bonus:${userId}`;
+            const storageKey = `daily-check-in:bonus:${STORAGE_VERSION}:${userId}`;
             localStorage.setItem(storageKey, JSON.stringify(updated));
           }
           return updated;
