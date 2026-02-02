@@ -293,6 +293,8 @@ export default function Home() {
 
         {status && <p className={styles.feedback}>{status}</p>}
 
+        <div className={styles.divider} />
+
         <section className={styles.summary}>
           <div className={styles.count}>
             <span className={styles.countNumber}>{checkIns.length}</span>
