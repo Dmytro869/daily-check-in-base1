@@ -261,10 +261,13 @@ export default function Home() {
         <div className={styles.status}>
           {isAuthLoading && <span>Connecting to Base...</span>}
           {!isAuthLoading && authError && <span>{authError}</span>}
-          {!isAuthLoading && !authError && hasCheckedInToday && (
+          {!isAuthLoading && !authError && !isConnected && (
+            <span>Connect your wallet to send transactions.</span>
+          )}
+          {!isAuthLoading && !authError && isConnected && hasCheckedInToday && (
             <span>You already checked in today</span>
           )}
-          {!isAuthLoading && !authError && !hasCheckedInToday && (
+          {!isAuthLoading && !authError && isConnected && !hasCheckedInToday && (
             <span>Tap to send a 0 ETH check-in transaction.</span>
           )}
         </div>
