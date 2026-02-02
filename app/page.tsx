@@ -158,7 +158,7 @@ export default function Home() {
       setStatus("Confirm the 0 ETH transaction...");
       await sendTransactionAsync({
         to: toAddress,
-        value: 0n,
+        value: BigInt(0),
       });
     } catch (error) {
       setStatus(
