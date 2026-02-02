@@ -296,6 +296,10 @@
   .historyList {
     grid-template-columns: 1fr;
   }
+
+  .bonusPanel {
+    margin-top: 6px;
+  }
 }
 
 .bonusButton:focus-visible {
