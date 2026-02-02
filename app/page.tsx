@@ -276,6 +276,7 @@ export default function Home() {
           className={styles.checkInButton}
           type="button"
           onClick={handleCheckIn}
+          aria-label="Send daily check-in transaction"
           disabled={
             !userId ||
             hasCheckedInToday ||
@@ -338,6 +339,7 @@ export default function Home() {
               className={styles.bonusButton}
               type="button"
               onClick={handleBonusTx}
+              aria-label="Send bonus transaction"
               disabled={
                 !userId ||
                 !canSendBonus ||
