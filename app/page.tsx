@@ -256,6 +256,9 @@ export default function Home() {
           <p className={styles.date}>
             {displayDate} · {timeZone}
           </p>
+          {hasCheckedInToday && (
+            <span className={styles.badge}>Checked in today</span>
+          )}
         </header>
 
         <div className={styles.status}>

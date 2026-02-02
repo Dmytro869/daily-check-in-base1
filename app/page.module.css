@@ -48,6 +48,16 @@
   color: rgba(248, 249, 255, 0.7);
 }
 
+.badge {
+  align-self: flex-start;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: rgba(166, 255, 203, 0.15);
+  color: #a6ffcb;
+}
+
 .status {
   min-height: 24px;
   font-size: 0.95rem;
