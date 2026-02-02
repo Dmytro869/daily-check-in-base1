@@ -308,6 +308,7 @@ export default function Home() {
           type="button"
           onClick={handleCheckIn}
           aria-label="Send daily check-in transaction"
+          data-track="check-in"
           title={checkInDisabledReason}
           disabled={
             !userId ||
