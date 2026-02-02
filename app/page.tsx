@@ -297,6 +297,7 @@ export default function Home() {
         <p className={styles.helper}>
           Each check-in sends a 0 ETH transaction and still needs gas.
         </p>
+        <p className={styles.note}>Limit: one check-in per day.</p>
 
         {status && <p className={styles.feedback}>{status}</p>}
 
