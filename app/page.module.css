@@ -227,6 +227,17 @@
   transform: translateY(-1px);
 }
 
+@media (max-width: 420px) {
+  .card {
+    padding: 20px;
+    gap: 16px;
+  }
+
+  .historyList {
+    grid-template-columns: 1fr;
+  }
+}
+
 .bonusButton:focus-visible {
   outline: 2px solid rgba(91, 140, 255, 0.7);
   outline-offset: 2px;
