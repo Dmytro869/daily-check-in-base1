@@ -85,6 +85,8 @@
 .checkInButton:disabled {
   opacity: 0.6;
   cursor: not-allowed;
+  background: rgba(91, 140, 255, 0.35);
+  color: rgba(255, 255, 255, 0.8);
 }
 
 .checkInButton:not(:disabled):hover {
@@ -233,6 +235,7 @@
 .bonusButton:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  border-color: rgba(91, 140, 255, 0.3);
 }
 
 .bonusButton:not(:disabled):hover {
