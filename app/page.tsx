@@ -127,10 +127,10 @@ export default function Home() {
         <section className={styles.summary}>
           <div className={styles.count}>
             <span className={styles.countNumber}>{checkIns.length}</span>
-            <span className={styles.countLabel}>total days</span>
+            <span className={styles.countLabel}>days checked in</span>
           </div>
           <div className={styles.history}>
-            <p className={styles.historyTitle}>History</p>
+            <p className={styles.historyTitle}>Last 7 days</p>
             {checkIns.length === 0 && (
               <p className={styles.historyEmpty}>No check-ins yet.</p>
             )}
