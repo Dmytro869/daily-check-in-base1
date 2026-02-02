@@ -1,47 +1,58 @@
 "use client";
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import sdk from "@farcaster/miniapp-sdk";
 import { useMiniApp } from "./providers/MiniAppProvider";
-import { useRouter } from "next/navigation";
-import { farcasterConfig } from "../farcaster.config";
 import styles from "./page.module.css";
 
 interface AuthResponse {
   success: boolean;
   user?: {
-    fid: number; // FID is the unique identifier for the user
+    fid: number;
     issuedAt?: number;
     expiresAt?: number;
   };
-  message?: string; // Error messages come as 'message' not 'error'
+  message?: string;
 }
 
+const getTodayKey = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, "0");
+  const day = String(now.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
+
+const formatDisplayDate = (date: Date) =>
+  date.toLocaleDateString(undefined, {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+  });
 
 export default function Home() {
   const { context, isReady } = useMiniApp();
-  const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
- 
-  
-
-  // If you need to verify the user's identity, you can use the SDK's quickAuth.
-  // This will verify the user's signature and return the user's FID. You can update
-  // this to meet your needs. See the /app/api/auth/route.ts file for more details.
-  // Note: If you don't need to verify the user's identity, you can get their FID and other user data
-  // via `context.user.fid`.
   const [authData, setAuthData] = useState<AuthResponse | null>(null);
   const [isAuthLoading, setIsAuthLoading] = useState(true);
-  const [authError, setAuthError] = useState<Error | null>(null);
+  const [authError, setAuthError] = useState<string>("");
+  const [checkIns, setCheckIns] = useState<string[]>([]);
+  const [status, setStatus] = useState<string>("");
+
+  const userId = authData?.user?.fid ?? context?.user?.fid;
+  const todayKey = useMemo(() => getTodayKey(), []);
+  const displayDate = useMemo(() => formatDisplayDate(new Date()), []);
 
   useEffect(() => {
     const authenticate = async () => {
       try {
-        const response = await sdk.quickAuth.fetch('/api/auth');
-        const data = await response.json();
+        const response = await sdk.quickAuth.fetch("/api/auth");
+        const data = (await response.json()) as AuthResponse;
         setAuthData(data);
+        if (!data.success) {
+          setAuthError(data.message || "Unable to verify identity.");
+        }
       } catch (err) {
-        setAuthError(err as Error);
+        setAuthError(err instanceof Error ? err.message : "Auth error.");
       } finally {
         setIsAuthLoading(false);
       }
@@ -52,76 +63,93 @@ export default function Home() {
     }
   }, [isReady]);
 
-  const validateEmail = (email: string) => {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    // Check authentication first
-    if (isAuthLoading) {
-      setError("Please wait while we verify your identity...");
+  useEffect(() => {
+    if (!userId) {
       return;
     }
+    const storageKey = `daily-check-in:${userId}`;
+    const raw = localStorage.getItem(storageKey);
+    const parsed = raw ? (JSON.parse(raw) as string[]) : [];
+    const sorted = Array.from(new Set(parsed)).sort();
+    setCheckIns(sorted);
+  }, [userId]);
 
-    if (authError || !authData?.success) {
-      setError("Please authenticate to join the waitlist");
+  const hasCheckedInToday = checkIns.includes(todayKey);
+
+  const handleCheckIn = () => {
+    setStatus("");
+    if (!userId) {
+      setStatus("Waiting for user identity...");
       return;
     }
-
-    if (!email) {
-      setError("Please enter your email address");
+    if (hasCheckedInToday) {
+      setStatus("You already checked in today");
       return;
     }
-
-    if (!validateEmail(email)) {
-      setError("Please enter a valid email address");
-      return;
-    }
-
-    // TODO: Save email to database/API with user FID
-    console.log("Valid email submitted:", email);
-    console.log("User authenticated:", authData.user);
-    
-    // Navigate to success page
-    router.push("/success");
+    const updated = [...checkIns, todayKey].sort();
+    const storageKey = `daily-check-in:${userId}`;
+    localStorage.setItem(storageKey, JSON.stringify(updated));
+    setCheckIns(updated);
+    setStatus("Checked in. Nice work!");
   };
 
   return (
     <div className={styles.container}>
-      <button className={styles.closeButton} type="button">
-        ✕
-      </button>
-      
-      <div className={styles.content}>
-        <div className={styles.waitlistForm}>
-          <h1 className={styles.title}>Join {farcasterConfig.miniapp.name.toUpperCase()}</h1>
-          
-          <p className={styles.subtitle}>
-             Hey {context?.user?.displayName || "there"}, Get early access and be the first to experience the future of<br />
-            crypto marketing strategy.
-          </p>
+      <main className={styles.card}>
+        <header className={styles.header}>
+          <p className={styles.eyebrow}>Daily Check-In</p>
+          <h1 className={styles.title}>Consistency wins</h1>
+          <p className={styles.date}>{displayDate}</p>
+        </header>
 
-          <form onSubmit={handleSubmit} className={styles.form}>
-            <input
-              type="email"
-              placeholder="Your amazing email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className={styles.emailInput}
-            />
-            
-            {error && <p className={styles.error}>{error}</p>}
-            
-            <button type="submit" className={styles.joinButton}>
-              JOIN WAITLIST
-            </button>
-          </form>
+        <div className={styles.status}>
+          {isAuthLoading && <span>Connecting to Base...</span>}
+          {!isAuthLoading && authError && <span>{authError}</span>}
+          {!isAuthLoading && !authError && hasCheckedInToday && (
+            <span>You already checked in today</span>
+          )}
+          {!isAuthLoading && !authError && !hasCheckedInToday && (
+            <span>Tap once to log today&apos;s check-in.</span>
+          )}
         </div>
-      </div>
+
+        <button
+          className={styles.checkInButton}
+          type="button"
+          onClick={handleCheckIn}
+          disabled={!userId || hasCheckedInToday}
+        >
+          {hasCheckedInToday ? "Checked In" : "Check-In"}
+        </button>
+
+        {status && <p className={styles.feedback}>{status}</p>}
+
+        <section className={styles.summary}>
+          <div className={styles.count}>
+            <span className={styles.countNumber}>{checkIns.length}</span>
+            <span className={styles.countLabel}>total days</span>
+          </div>
+          <div className={styles.history}>
+            <p className={styles.historyTitle}>History</p>
+            {checkIns.length === 0 && (
+              <p className={styles.historyEmpty}>No check-ins yet.</p>
+            )}
+            {checkIns.length > 0 && (
+              <ul className={styles.historyList}>
+                {checkIns
+                  .slice()
+                  .reverse()
+                  .slice(0, 7)
+                  .map((day) => (
+                    <li key={day} className={styles.historyItem}>
+                      {day}
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }
