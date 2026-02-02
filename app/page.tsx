@@ -400,7 +400,7 @@ export default function Home() {
                 isConnecting
               }
             >
-              {isTxPending || isConfirming ? "Sending..." : "Send Bonus Tx"}
+              {isTxPending || isConfirming ? "Sending bonus..." : "Send Bonus"}
             </button>
           </div>
         </section>
