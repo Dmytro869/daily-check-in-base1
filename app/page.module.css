@@ -179,6 +179,8 @@
   padding: 8px 10px;
   font-size: 0.85rem;
   text-align: center;
+  font-family: var(--font-source-code-pro), ui-monospace, SFMono-Regular, Menlo,
+    Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
 }
 
 .historyItem:hover {
