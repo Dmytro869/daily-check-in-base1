@@ -76,6 +76,7 @@
   max-width: 300px;
   line-height: 1.4;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 8px 10px;
 }
 
 .wallet {
