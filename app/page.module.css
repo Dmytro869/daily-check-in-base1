@@ -134,6 +134,7 @@
   margin: -6px 0 0;
   font-size: 0.85rem;
   color: rgba(248, 249, 255, 0.55);
+  max-width: 280px;
 }
 
 .note {
