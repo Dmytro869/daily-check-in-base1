@@ -324,6 +324,11 @@ export default function Home() {
             <div className={styles.bonusText}>
               Bonus tx today: {bonusCountToday}/10
             </div>
+            {bonusCountToday === 0 && (
+              <p className={styles.bonusHint}>
+                Tip: you can send up to 10 bonus tx per day.
+              </p>
+            )}
             <button
               className={styles.bonusButton}
               type="button"

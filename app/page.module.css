@@ -172,6 +172,12 @@
   color: rgba(248, 249, 255, 0.7);
 }
 
+.bonusHint {
+  margin: 0;
+  font-size: 0.85rem;
+  color: rgba(248, 249, 255, 0.6);
+}
+
 .bonusButton {
   background: rgba(91, 140, 255, 0.2);
   color: #dbe6ff;
