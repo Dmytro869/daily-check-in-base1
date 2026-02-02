@@ -167,6 +167,7 @@ export default function Home() {
   const hasCheckedInToday = checkIns.includes(todayKey);
   const bonusCountToday = bonusCountsByDay[todayKey] ?? 0;
   const canSendBonus = bonusCountToday < 10;
+  const bonusRemaining = Math.max(0, 10 - bonusCountToday);
   const lastCheckIn = checkIns.length ? checkIns[checkIns.length - 1] : null;
   const checkInDisabledReason = useMemo(() => {
     if (!userId) return "Waiting for identity";
@@ -376,6 +377,11 @@ export default function Home() {
             <p className={styles.bonusGas}>
               Bonus transactions also require gas.
             </p>
+            {bonusRemaining > 0 && bonusRemaining <= 2 && (
+              <p className={styles.bonusLow}>
+                Only {bonusRemaining} bonus tx left today.
+              </p>
+            )}
             {!canSendBonus && (
               <p className={styles.bonusLimit}>Daily bonus limit reached.</p>
             )}
