@@ -313,6 +313,18 @@
   }
 }
 
+@media (prefers-reduced-motion: reduce) {
+  .badge {
+    animation: none;
+  }
+
+  .checkInButton,
+  .bonusButton,
+  .historyItem {
+    transition: none;
+  }
+}
+
 .bonusButton:focus-visible {
   outline: 2px solid rgba(91, 140, 255, 0.7);
   outline-offset: 2px;
