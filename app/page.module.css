@@ -56,6 +56,17 @@
   font-weight: 600;
   background: rgba(166, 255, 203, 0.15);
   color: #a6ffcb;
+  animation: badgePulse 1.6s ease-in-out infinite;
+}
+
+@keyframes badgePulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.03);
+  }
 }
 
 .status {
