@@ -59,6 +59,8 @@
   background: rgba(166, 255, 203, 0.15);
   color: #a6ffcb;
   animation: badgePulse 1.6s ease-in-out infinite;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
 @keyframes badgePulse {
