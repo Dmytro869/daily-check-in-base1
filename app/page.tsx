@@ -56,6 +56,12 @@ export default function Home() {
     () => Intl.DateTimeFormat().resolvedOptions().timeZone,
     []
   );
+  const shortAddress = useMemo(() => {
+    if (!address) {
+      return null;
+    }
+    return `${address.slice(0, 6)}...${address.slice(-4)}`;
+  }, [address]);
   const { address, isConnected } = useAccount();
   const { connectAsync, connectors, isPending: isConnecting } = useConnect();
   const {
@@ -277,6 +283,9 @@ export default function Home() {
           )}
           {!isAuthLoading && !authError && isConnected && !hasCheckedInToday && (
             <span>Tap to send a 0 ETH check-in transaction.</span>
+          )}
+          {!isAuthLoading && !authError && isConnected && shortAddress && (
+            <span className={styles.wallet}>Wallet: {shortAddress}</span>
           )}
         </div>
 

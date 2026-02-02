@@ -77,6 +77,13 @@
   line-height: 1.4;
 }
 
+.wallet {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.85rem;
+  color: rgba(248, 249, 255, 0.6);
+}
+
 .statusError {
   color: #ff8a8a;
 }
