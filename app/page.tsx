@@ -381,6 +381,7 @@ export default function Home() {
               type="button"
               onClick={handleBonusTx}
               aria-label="Send bonus transaction"
+              data-track="bonus-tx"
               title={bonusDisabledReason}
               disabled={
                 !userId ||
