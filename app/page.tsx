@@ -166,6 +166,20 @@ export default function Home() {
   const bonusCountToday = bonusCountsByDay[todayKey] ?? 0;
   const canSendBonus = bonusCountToday < 10;
   const lastCheckIn = checkIns.length ? checkIns[checkIns.length - 1] : null;
+  const checkInDisabledReason = useMemo(() => {
+    if (!userId) return "Waiting for identity";
+    if (hasCheckedInToday) return "Already checked in today";
+    if (isTxPending || isConfirming) return "Transaction in progress";
+    if (isConnecting) return "Connecting wallet";
+    return "";
+  }, [userId, hasCheckedInToday, isTxPending, isConfirming, isConnecting]);
+  const bonusDisabledReason = useMemo(() => {
+    if (!userId) return "Waiting for identity";
+    if (!canSendBonus) return "Daily bonus limit reached";
+    if (isTxPending || isConfirming) return "Transaction in progress";
+    if (isConnecting) return "Connecting wallet";
+    return "";
+  }, [userId, canSendBonus, isTxPending, isConfirming, isConnecting]);
 
   const handleCheckIn = async () => {
     setStatus("");
@@ -294,6 +308,7 @@ export default function Home() {
           type="button"
           onClick={handleCheckIn}
           aria-label="Send daily check-in transaction"
+          title={checkInDisabledReason}
           disabled={
             !userId ||
             hasCheckedInToday ||
@@ -365,6 +380,7 @@ export default function Home() {
               type="button"
               onClick={handleBonusTx}
               aria-label="Send bonus transaction"
+              title={bonusDisabledReason}
               disabled={
                 !userId ||
                 !canSendBonus ||
