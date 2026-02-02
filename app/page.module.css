@@ -41,6 +41,7 @@
   font-size: clamp(1.6rem, 4vw, 2.2rem);
   font-weight: 700;
   margin: 0;
+  letter-spacing: -0.01em;
 }
 
 .date {

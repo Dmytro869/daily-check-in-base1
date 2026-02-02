@@ -56,13 +56,13 @@ export default function Home() {
     () => Intl.DateTimeFormat().resolvedOptions().timeZone,
     []
   );
+  const { address, isConnected } = useAccount();
   const shortAddress = useMemo(() => {
     if (!address) {
       return null;
     }
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
   }, [address]);
-  const { address, isConnected } = useAccount();
   const { connectAsync, connectors, isPending: isConnecting } = useConnect();
   const {
     data: txHash,
