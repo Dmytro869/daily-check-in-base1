@@ -261,7 +261,9 @@ export default function Home() {
           )}
         </header>
 
-        <div className={styles.status}>
+        <div
+          className={`${styles.status} ${txError ? styles.statusError : ""}`}
+        >
           {isAuthLoading && <span>Connecting to Base...</span>}
           {!isAuthLoading && authError && <span>{authError}</span>}
           {!isAuthLoading && !authError && !isConnected && (

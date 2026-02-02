@@ -66,6 +66,10 @@
   line-height: 1.4;
 }
 
+.statusError {
+  color: #ff8a8a;
+}
+
 .checkInButton {
   background: #5b8cff;
   color: #fff;
