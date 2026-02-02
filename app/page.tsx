@@ -252,7 +252,7 @@ export default function Home() {
       <main className={styles.card}>
         <header className={styles.header}>
           <p className={styles.eyebrow}>Daily Check-In</p>
-          <h1 className={styles.title}>Consistency wins</h1>
+          <h1 className={styles.title}>Daily consistency</h1>
           <p className={styles.date}>
             {displayDate} · {timeZone}
           </p>
