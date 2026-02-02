@@ -337,6 +337,7 @@ export default function Home() {
             <span className={styles.countNumber}>{checkIns.length}</span>
             <span className={styles.countLabel}>days checked in</span>
           </div>
+          <div className={styles.countSeparator} />
           <p className={styles.lastCheckIn}>
             Last check-in: {lastCheckIn ?? "—"}
           </p>

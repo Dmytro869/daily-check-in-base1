@@ -168,6 +168,12 @@
   color: rgba(248, 249, 255, 0.65);
 }
 
+.countSeparator {
+  width: 40px;
+  height: 1px;
+  background: rgba(255, 255, 255, 0.12);
+}
+
 .lastCheckIn {
   margin: 0;
   font-size: 0.9rem;
