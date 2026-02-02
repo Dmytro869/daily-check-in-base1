@@ -75,6 +75,11 @@
   transform: translateY(-1px);
 }
 
+.checkInButton:focus-visible {
+  outline: 2px solid rgba(91, 140, 255, 0.8);
+  outline-offset: 2px;
+}
+
 .feedback {
   margin: 0;
   font-size: 0.95rem;
@@ -186,4 +191,9 @@
 
 .bonusButton:not(:disabled):hover {
   transform: translateY(-1px);
+}
+
+.bonusButton:focus-visible {
+  outline: 2px solid rgba(91, 140, 255, 0.7);
+  outline-offset: 2px;
 }
