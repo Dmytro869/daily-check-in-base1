@@ -385,6 +385,7 @@ export default function Home() {
             {!canSendBonus && (
               <p className={styles.bonusLimit}>Daily bonus limit reached.</p>
             )}
+            <div className={styles.bonusDivider} />
             <button
               className={styles.bonusButton}
               type="button"

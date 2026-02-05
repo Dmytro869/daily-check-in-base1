@@ -273,6 +273,12 @@
   color: rgba(255, 140, 140, 0.9);
 }
 
+.bonusDivider {
+  height: 1px;
+  width: 100%;
+  background: rgba(255, 255, 255, 0.08);
+}
+
 .bonusButton {
   background: rgba(91, 140, 255, 0.2);
   color: #dbe6ff;
