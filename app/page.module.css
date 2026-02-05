@@ -114,6 +114,7 @@
   cursor: pointer;
   transition: transform 0.2s ease, opacity 0.2s ease;
   box-shadow: 0 8px 18px rgba(91, 140, 255, 0.25);
+  margin-top: 4px;
 }
 
 .checkInButton:disabled {
