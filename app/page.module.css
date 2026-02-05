@@ -82,6 +82,8 @@
   letter-spacing: 0.08em;
   border: 1px solid rgba(166, 255, 203, 0.35);
   box-shadow: 0 6px 12px rgba(166, 255, 203, 0.15);
+  min-width: 120px;
+  text-align: center;
 }
 
 @keyframes badgePulse {
