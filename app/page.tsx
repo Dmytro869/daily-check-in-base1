@@ -274,6 +274,7 @@ export default function Home() {
     <div className={styles.container}>
       <main className={styles.card}>
         <header className={styles.header}>
+          <span className={styles.headerIcon} aria-hidden="true" />
           <p className={styles.eyebrow}>Daily Check-In</p>
           <h1 className={styles.title}>Daily consistency</h1>
           <p className={styles.date}>
