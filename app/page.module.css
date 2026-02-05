@@ -308,6 +308,7 @@
 
 .bonusButton:not(:disabled):hover {
   transform: translateY(-1px);
+  background: rgba(91, 140, 255, 0.3);
 }
 
 @media (max-width: 420px) {
