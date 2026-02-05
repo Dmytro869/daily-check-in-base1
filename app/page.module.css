@@ -368,6 +368,10 @@
     grid-template-columns: 1fr;
   }
 
+  .historyItem {
+    padding: 6px 8px;
+  }
+
   .bonusPanel {
     margin-top: 6px;
   }
