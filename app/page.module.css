@@ -166,12 +166,14 @@
   font-size: clamp(0.8rem, 2.5vw, 0.85rem);
   color: rgba(248, 249, 255, 0.55);
   max-width: 280px;
+  line-height: 1.4;
 }
 
 .note {
   margin: -4px 0 0;
   font-size: 0.85rem;
   color: rgba(248, 249, 255, 0.55);
+  line-height: 1.4;
 }
 
 .divider {
