@@ -292,6 +292,9 @@ export default function Home() {
           {!isAuthLoading && !authError && !isConnected && (
             <span>Connect your wallet to send transactions.</span>
           )}
+          {!isAuthLoading && !authError && !isConnected && (
+            <span className={styles.walletHint}>Use your Base wallet.</span>
+          )}
           {!isAuthLoading && !authError && (isTxPending || isConfirming) && (
             <span>Transaction in progress...</span>
           )}
