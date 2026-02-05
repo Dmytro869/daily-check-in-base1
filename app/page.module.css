@@ -316,6 +316,11 @@
     font-size: 0.85rem;
   }
 
+  .status {
+    font-size: 0.9rem;
+    padding: 6px 8px;
+  }
+
   .historyList {
     grid-template-columns: 1fr;
   }
