@@ -8,6 +8,8 @@
   color: #f8f9ff;
   align-items: center;
   justify-content: center;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
 
 .card {
