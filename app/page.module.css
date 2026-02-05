@@ -126,6 +126,7 @@
 
 .checkInButton:not(:disabled):hover {
   transform: translateY(-1px);
+  background: #6b96ff;
 }
 
 .checkInButton:focus-visible {
