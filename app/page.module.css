@@ -282,7 +282,7 @@
 .bonusPanel {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 12px;
   padding: 12px;
   border-radius: 14px;
   background: rgba(255, 255, 255, 0.04);
