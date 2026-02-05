@@ -21,11 +21,16 @@
   gap: 20px;
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
   min-height: 520px;
+  transition: transform 0.2s ease;
 }
 
 .card:focus-within {
   outline: 1px solid rgba(91, 140, 255, 0.5);
   outline-offset: 2px;
+}
+
+.card:hover {
+  transform: translateY(-2px);
 }
 
 .header {
