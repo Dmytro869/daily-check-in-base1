@@ -103,6 +103,7 @@
   background: rgba(255, 255, 255, 0.03);
   border-radius: 12px;
   text-align: left;
+  margin-bottom: 4px;
 }
 
 .wallet {
