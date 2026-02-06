@@ -101,7 +101,7 @@
 }
 
 .status {
-  min-height: 24px;
+  min-height: 28px;
   font-size: 0.9rem;
   color: rgba(248, 249, 255, 0.8);
   max-width: 320px;
